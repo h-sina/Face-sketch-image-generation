@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="post" action="http://localhost:5000/up_photo" enctype="multipart/form-data">
+    <input type="file" size="30" name="txt_photo"/>
+    <br>
+    <input type="text" class="txt_input" name="name" style="margin-top:15px;"/>
+    <input type="submit" value="提交信息" class="button-new" style="margin-top:15px;"/>
+</form>
+{#        <form method="post" action="http://127.0.0.1:5000/get" enctype="multipart/form-data">#}
+{#                <input type="file" id="file" class="txt_photo">#}
+{#        <br>#}
+{#                <input type="submit" value="上传图片"/>#}
+{#        </form>#}
+{#    <input type="button" value="上传图片" onclick="get_photo()" />#}
+<script>
+    function get_photo () {
+        let fileInput = document.getElementById('file')
+        console.log(fileInput.files[0])
+        var formData = new FormData();
+
+        //将file封装到Array
+        for(var i = 0;i < fileInput.length;i++){
+            //不能给FormData对象中直接传入一个数组，通过多次append的key相同时则可达到传数组的效果
+            formData.append("files",fileInput[i]);
+        }
+        formData.append("name",name);
+
+
+        let ajax = new XMLHttpRequest();
+        if (ajax.readyState === 0) {
+            console.log('====0请求未初始化====')
+        }
+        ajax.open('POST', 'http://127.0.0.1:5000/get/', true);
+        if (ajax.readyState === 1) {
+            console.log('====1服务器连接已建立====')
+        }
+        // 因为POST请求是通过请求体发送的数据，需要对数据进行一个格式处理
+        ajax.setRequestHeader('content-type','multipart/form-data');
+        ajax.send(formData);
+        if (ajax.readyState === 1) {
+            console.log('====1服务器连接已建立====')
+        }
+        ajax.onreadystatechange = function () {
+            if (ajax.readyState === 2) {
+                console.log('====2请求已接收====')
+            }
+            if (ajax.readyState === 3) {
+                console.log('====3请求处理中====')
+            }
+            if (ajax.readyState === 4) {
+                console.log('====4请求已完成====')
+                if (ajax.status >= 200) {
+                    console.log("接收返回的数据");
+                    console.log(ajax.responseText); // 对于非XML的数据这样处理
+                } else {
+                    console.log("没有接收到返回的数据");
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>
